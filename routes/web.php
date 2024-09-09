@@ -1,19 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProyectoController;
 
-// Rutas para la API de proyectos
-Route::prefix('api')->group(function () {
-    // Rutas CRUD para proyectos
-    Route::post('/proyectos', [ProyectoController::class, 'store']);
-    Route::get('/proyectos', [ProyectoController::class, 'index']);
-    Route::get('/proyectos/{id}', [ProyectoController::class, 'show']);
-    Route::put('/proyectos/{id}', [ProyectoController::class, 'update']);
-    Route::patch('/proyectos/{id}', [ProyectoController::class, 'update']);
-    Route::delete('/proyectos/{id}', [ProyectoController::class, 'destroy']);
-});
 
 // Rutas de autenticación
 Route::prefix('auth')->group(function () {
@@ -23,3 +15,18 @@ Route::prefix('auth')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
+
+// Rutas para la gestión de roles
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/create', [RoleController::class, 'create'])->name('roles.create');
+    Route::post('/', [RoleController::class, 'store'])->name('roles.store');
+    Route::get('/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
+    Route::put('/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+});
+
+Route::resource('users', UserController::class);
+
+// Rutas CRUD para proyectos accesibles sin el prefijo "api"
+Route::resource('proyectos', ProyectoController::class);
